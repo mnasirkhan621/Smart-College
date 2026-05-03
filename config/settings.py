@@ -44,6 +44,17 @@ if os.environ.get("RENDER"):
     # Also support wildcard for .onrender.com
     if ".onrender.com" not in [h.lower() for h in ALLOWED_HOSTS]:
         ALLOWED_HOSTS.append(".onrender.com")
+    
+    # CSRF & Security for Render
+    RENDER_EXTERNAL_URL = os.environ.get("RENDER_EXTERNAL_URL")
+    if RENDER_EXTERNAL_URL:
+        CSRF_TRUSTED_ORIGINS = [RENDER_EXTERNAL_URL]
+    
+    # Trust Render's proxy for HTTPS
+    SECURE_PROXY_SSL_HEADER = ("HTTP_X_FORWARDED_PROTO", "https")
+    SECURE_SSL_REDIRECT = True
+    SESSION_COOKIE_SECURE = True
+    CSRF_COOKIE_SECURE = True
 
 INSTALLED_APPS = [
     "django.contrib.admin",
