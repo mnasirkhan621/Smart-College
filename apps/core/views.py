@@ -39,7 +39,7 @@ def dashboard(request):
             teacher=faculty_profile,
             is_active=True,
         ).select_related("subject", "class_group", "semester", "academic_year") if faculty_profile else []
-        context["attendance_sessions_count"] = AttendanceSession.objects.filter(teacher=faculty_profile).count() if faculty_profile else 0
+        context["attendance_sessions_count"] = AttendanceSession.objects.filter(assignment__teacher=faculty_profile).count() if faculty_profile else 0
     else:
         template = "dashboards/student.html"
         student_profile = StudentProfile.objects.filter(user=user).first()
