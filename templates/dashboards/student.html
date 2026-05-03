@@ -1,67 +1,122 @@
 {% extends "base.html" %}
 
-{% block title %}Student Dashboard - SCMS{% endblock %}
+{% block title %}Student Dashboard | SCMS{% endblock %}
+
+{% block breadcrumbs %}Dashboard / Student Portal{% endblock %}
 
 {% block content %}
-<section class="dashboard">
-  <p class="eyebrow">Student</p>
-  <h1>Student Dashboard</h1>
+<section>
+  <div style="margin-bottom: 40px;">
+    <h1>Welcome back, {{ request.user.username }}</h1>
+    {% if student_profile %}
+      <p class="muted">{{ student_profile.full_name }} &bull; Reg: {{ student_profile.registration_no }}</p>
+    {% endif %}
+  </div>
+
   {% if student_profile %}
-    <p>{{ student_profile.full_name }} - {{ student_profile.registration_no }}</p>
-    <div class="grid">
-      <div class="tile"><span>Course</span><strong>{{ student_profile.course }}</strong></div>
-      <div class="tile"><span>Class</span><strong>{{ student_profile.current_class|default:"Not assigned" }}</strong></div>
-      <div class="tile"><span>Status</span><strong>{{ student_profile.get_status_display }}</strong></div>
-      <a class="tile" href="{% url 'attendance:student_attendance' %}">
-        <span>Attendance</span>
-        <strong>{% if attendance_percentage is not None %}{{ attendance_percentage }}%{% else %}No records{% endif %}</strong>
-      </a>
-      <a class="tile" href="{% url 'exams:student_results' %}">
-        <span>Results</span>
-        <strong>Published exams</strong>
-      </a>
-      <a class="tile" href="{% url 'fees:student_fees' %}">
-        <span>Fee Status</span>
-        <strong>Invoices and receipts</strong>
-      </a>
+    <div class="stats-grid">
+      <div class="stat-card">
+        <div class="stat-icon"><i data-lucide="book"></i></div>
+        <div class="stat-content">
+          <span class="stat-value">{{ enrollments.count }}</span>
+          <span class="stat-label">Active Subjects</span>
+        </div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-icon"><i data-lucide="bar-chart-3"></i></div>
+        <div class="stat-content">
+          <span class="stat-value">{% if attendance_percentage is not None %}{{ attendance_percentage }}%{% else %}N/A{% endif %}</span>
+          <span class="stat-label">Attendance</span>
+        </div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-icon"><i data-lucide="award"></i></div>
+        <div class="stat-content">
+          <span class="stat-value">{{ result_count|default:"0" }}</span>
+          <span class="stat-label">Published Results</span>
+        </div>
+      </div>
     </div>
-    <div class="table-wrap">
-      <table>
-        <thead>
-          <tr>
-            <th>Subject</th>
-            <th>Class</th>
-            <th>Semester</th>
-            <th>Academic Year</th>
-          </tr>
-        </thead>
-        <tbody>
-          {% for enrollment in enrollments %}
-            <tr>
-              <td>{{ enrollment.subject }}</td>
-              <td>{{ enrollment.class_group }}</td>
-              <td>{{ enrollment.semester }}</td>
-              <td>{{ enrollment.academic_year }}</td>
-            </tr>
+
+    <div class="grid" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 32px;">
+      <!-- Academic Status -->
+      <div class="panel">
+        <h2 style="margin-top: 0;">Academic Status</h2>
+        <div class="detail-list" style="border: 0; margin-top: 10px;">
+          <div style="grid-template-columns: 120px 1fr; padding: 12px 0; border-bottom: 1px solid var(--border);">
+            <span class="muted">Course:</span>
+            <strong>{{ student_profile.course }}</strong>
+          </div>
+          <div style="grid-template-columns: 120px 1fr; padding: 12px 0; border-bottom: 1px solid var(--border);">
+            <span class="muted">Class:</span>
+            <strong>{{ student_profile.current_class|default:"Not assigned" }}</strong>
+          </div>
+          <div style="grid-template-columns: 120px 1fr; padding: 12px 0; border-bottom: 1px solid var(--border);">
+            <span class="muted">Status:</span>
+            <span class="badge success">{{ student_profile.get_status_display }}</span>
+          </div>
+        </div>
+        <div class="actions" style="margin-top: 24px;">
+          <a class="button primary" href="{% url 'attendance:student_attendance' %}" style="flex: 1;">Attendance Details</a>
+          <a class="button" href="{% url 'exams:student_results' %}" style="flex: 1;">View Results</a>
+        </div>
+      </div>
+
+      <!-- Quick Actions & Notices -->
+      <div class="panel">
+        <h2 style="margin-top: 0;">Recent Notices</h2>
+        <div class="notice-list compact" style="margin-top: 16px;">
+          {% for notice in notices %}
+            <div style="padding: 12px; border-bottom: 1px solid var(--border);">
+              <strong style="display: block; font-size: 14px;">{{ notice.title }}</strong>
+              <span class="muted">{{ notice.publish_at|date:"M d, Y" }}</span>
+            </div>
           {% empty %}
-            <tr><td colspan="4">No active enrollments yet.</td></tr>
+            <div class="muted">No active notices.</div>
           {% endfor %}
-        </tbody>
-      </table>
+          <a href="{% url 'attendance:notice_list' %}" class="button" style="width: 100%; margin-top: 12px; font-size: 13px;">View All Notices</a>
+        </div>
+      </div>
     </div>
-    <h2>Recent Notices</h2>
-    <div class="notice-list compact">
-      {% for notice in notices %}
-        <article>
-          <strong>{{ notice.title }}</strong>
-          <span>{{ notice.publish_at|date:"M d, Y" }}</span>
-        </article>
-      {% empty %}
-        <article><strong>No notices yet.</strong></article>
-      {% endfor %}
+
+    <!-- Active Enrollments -->
+    <div class="panel" style="margin-top: 32px;">
+      <h2 style="margin-top: 0;">Current Subjects</h2>
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>Subject</th>
+              <th>Class</th>
+              <th>Semester</th>
+              <th>Session</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for enrollment in enrollments %}
+              <tr>
+                <td><strong>{{ enrollment.subject }}</strong></td>
+                <td>{{ enrollment.class_group }}</td>
+                <td>{{ enrollment.semester }}</td>
+                <td>{{ enrollment.academic_year }}</td>
+              </tr>
+            {% empty %}
+              <tr><td colspan="4" class="muted">No active enrollments yet.</td></tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
     </div>
   {% else %}
-    <p>Your student profile has not been connected by the admin yet.</p>
+    <div class="panel" style="text-align: center; padding: 60px;">
+      <i data-lucide="user-x" style="width: 48px; height: 48px; color: var(--text-muted); margin-bottom: 16px;"></i>
+      <h3>Profile Pending</h3>
+      <p>Your student profile has not been connected to your user account yet. Please contact the college office.</p>
+    </div>
   {% endif %}
 </section>
+
+<script>
+  lucide.createIcons();
+</script>
 {% endblock %}

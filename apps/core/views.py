@@ -3,8 +3,9 @@ from django.shortcuts import redirect, render
 from django.views.generic import TemplateView
 
 from apps.accounts.models import User
-from apps.academics.models import Enrollment, FacultyProfile, StudentProfile, TeacherSubjectAssignment
-from apps.attendance.models import AttendanceRecord, Notice
+from apps.academics.models import Enrollment, FacultyProfile, StudentProfile, TeacherSubjectAssignment, Course
+from apps.attendance.models import AttendanceRecord, Notice, AttendanceSession
+from apps.fees.models import Invoice
 
 
 class HomeView(TemplateView):
@@ -24,6 +25,12 @@ def dashboard(request):
     }
     if user.is_admin_role:
         template = "dashboards/admin.html"
+        context.update({
+            "user_count": User.objects.count(),
+            "student_count": StudentProfile.objects.count(),
+            "course_count": Course.objects.count(),
+            "pending_fees": Invoice.objects.filter(status=Invoice.Status.UNPAID).count(),
+        })
     elif user.role == User.Roles.TEACHER:
         template = "dashboards/teacher.html"
         faculty_profile = FacultyProfile.objects.filter(user=user).first()
@@ -32,6 +39,7 @@ def dashboard(request):
             teacher=faculty_profile,
             is_active=True,
         ).select_related("subject", "class_group", "semester", "academic_year") if faculty_profile else []
+        context["attendance_sessions_count"] = AttendanceSession.objects.filter(teacher=faculty_profile).count() if faculty_profile else 0
     else:
         template = "dashboards/student.html"
         student_profile = StudentProfile.objects.filter(user=user).first()
@@ -45,4 +53,5 @@ def dashboard(request):
             total = records.count()
             present = records.filter(status__in=[AttendanceRecord.Status.PRESENT, AttendanceRecord.Status.LATE]).count()
             context["attendance_percentage"] = round((present / total) * 100, 2) if total else None
+            context["result_count"] = 0 # Placeholder for results logic
     return render(request, template, context)

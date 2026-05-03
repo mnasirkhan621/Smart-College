@@ -1,11 +1,56 @@
 {% extends "base.html" %}
 
-{% block title %}SCMS Login{% endblock %}
+{% block title %}Smart College Management System | SCMS{% endblock %}
 
 {% block content %}
-<section class="center-panel">
-  <h1>Smart College Management System</h1>
-  <p>Centralized academic and administrative management for college operations.</p>
-  <a class="button primary" href="{% url 'accounts:login' %}">Login</a>
-</section>
+<div style="display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: calc(100vh - 200px); text-align: center; padding: 40px;">
+  <div style="background: var(--accent-soft); color: var(--accent); padding: 12px 24px; border-radius: 99px; font-weight: 700; font-size: 14px; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 24px;">
+    Modern Academic Excellence
+  </div>
+  
+  <h1 style="font-size: clamp(2.5rem, 8vw, 4.5rem); line-height: 1.1; margin-bottom: 24px; max-width: 900px; color: var(--primary);">
+    Empowering Education through <span style="color: var(--accent);">Smart Management</span>.
+  </h1>
+  
+  <p style="font-size: 20px; max-width: 700px; margin-bottom: 40px; color: var(--text-muted);">
+    A unified platform for students, faculty, and administration to manage academics, attendance, exams, and finances with elegance and efficiency.
+  </p>
+
+  <div style="display: flex; gap: 16px; flex-wrap: wrap; justify-content: center;">
+    <a class="button primary" href="{% url 'accounts:login' %}" style="padding: 16px 32px; font-size: 18px; border-radius: var(--radius-md);">
+      Get Started <i data-lucide="arrow-right" style="margin-left: 8px;"></i>
+    </a>
+    <a class="button" href="#features" style="padding: 16px 32px; font-size: 18px; border-radius: var(--radius-md);">
+      Explore Features
+    </a>
+  </div>
+
+  <div id="features" style="margin-top: 100px; display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 32px; width: 100%; max-width: 1200px;">
+    <div class="panel" style="text-align: left;">
+      <div style="width: 48px; height: 48px; background: #eff6ff; color: #3b82f6; border-radius: 12px; display: flex; align-items: center; justify-content: center; margin-bottom: 20px;">
+        <i data-lucide="graduation-cap"></i>
+      </div>
+      <h3>Academic Hub</h3>
+      <p>Manage courses, subjects, and enrollments with intuitive record-keeping and student profiles.</p>
+    </div>
+    <div class="panel" style="text-align: left;">
+      <div style="width: 48px; height: 48px; background: #ecfdf5; color: #10b981; border-radius: 12px; display: flex; align-items: center; justify-content: center; margin-bottom: 20px;">
+        <i data-lucide="check-square"></i>
+      </div>
+      <h3>Smart Attendance</h3>
+      <p>Efficient daily attendance tracking for faculty and real-time monitoring for students and admins.</p>
+    </div>
+    <div class="panel" style="text-align: left;">
+      <div style="width: 48px; height: 48px; background: #fff7ed; color: #f97316; border-radius: 12px; display: flex; align-items: center; justify-content: center; margin-bottom: 20px;">
+        <i data-lucide="bar-chart-3"></i>
+      </div>
+      <h3>Exam & Results</h3>
+      <p>Automated grading systems, exam scheduling, and instant result publishing for all semesters.</p>
+    </div>
+  </div>
+</div>
+
+<script>
+  lucide.createIcons();
+</script>
 {% endblock %}

@@ -1,42 +1,85 @@
 {% extends "base.html" %}
 
-{% block title %}Users - SCMS{% endblock %}
+{% block title %}User Management | SCMS{% endblock %}
+
+{% block breadcrumbs %}Administration / Users{% endblock %}
 
 {% block content %}
-<section class="dashboard">
-  <div class="section-heading">
+<section>
+  <div style="display: flex; justify-content: space-between; align-items: flex-end; margin-bottom: 32px;">
     <div>
-      <p class="eyebrow">Admin</p>
-      <h1>User Management</h1>
+      <h1>User Directory</h1>
+      <p>Manage access and permissions for all college members including administrators, faculty, and students.</p>
     </div>
-    <a class="button primary" href="{% url 'accounts:user_create' %}">Create User</a>
+    <div class="actions">
+      <a class="button primary" href="{% url 'accounts:user_create' %}">
+        <i data-lucide="user-plus"></i> Create New User
+      </a>
+    </div>
   </div>
 
   <div class="table-wrap">
     <table>
       <thead>
         <tr>
-          <th>Username</th>
-          <th>Name</th>
-          <th>Email</th>
-          <th>Role</th>
-          <th>Status</th>
+          <th>User Info</th>
+          <th>Contact Details</th>
+          <th>Access Role</th>
+          <th>Account Status</th>
+          <th style="text-align: right;">Actions</th>
         </tr>
       </thead>
       <tbody>
         {% for user in users %}
           <tr>
-            <td>{{ user.username }}</td>
-            <td>{{ user.get_full_name|default:"-" }}</td>
-            <td>{{ user.email|default:"-" }}</td>
-            <td>{{ user.get_role_display }}</td>
-            <td>{% if user.is_active %}Active{% else %}Inactive{% endif %}</td>
+            <td>
+              <div style="display: flex; align-items: center; gap: 12px;">
+                <div style="width: 40px; height: 40px; background: var(--bg); border-radius: 8px; display: flex; align-items: center; justify-content: center; font-weight: 700; color: var(--text-muted); border: 1px solid var(--border);">
+                  {{ user.username|make_list|first|upper }}
+                </div>
+                <div>
+                  <div style="font-weight: 600;">{{ user.get_full_name|default:user.username }}</div>
+                  <div class="muted">@{{ user.username }}</div>
+                </div>
+              </div>
+            </td>
+            <td>
+              <div style="font-size: 14px;">{{ user.email|default:"No email provided" }}</div>
+              <div class="muted">Last login: {{ user.last_login|date:"M d, Y"|default:"Never" }}</div>
+            </td>
+            <td>
+              <span class="badge" style="background: var(--bg); border: 1px solid var(--border); color: var(--text);">
+                {{ user.get_role_display }}
+              </span>
+            </td>
+            <td>
+              {% if user.is_active %}
+                <span class="badge success">Active</span>
+              {% else %}
+                <span class="badge danger">Suspended</span>
+              {% endif %}
+            </td>
+            <td style="text-align: right;">
+              <div class="actions" style="justify-content: flex-end;">
+                <a href="#" class="button" title="Edit User"><i data-lucide="edit" style="width: 16px;"></i></a>
+                <a href="#" class="button" title="Security Settings"><i data-lucide="shield" style="width: 16px;"></i></a>
+              </div>
+            </td>
           </tr>
         {% empty %}
-          <tr><td colspan="5">No users found.</td></tr>
+          <tr>
+            <td colspan="5" style="padding: 60px; text-align: center;">
+              <i data-lucide="search-x" style="width: 40px; height: 40px; color: var(--text-muted); margin-bottom: 12px;"></i>
+              <div class="muted">No users found in the directory.</div>
+            </td>
+          </tr>
         {% endfor %}
       </tbody>
     </table>
   </div>
 </section>
+
+<script>
+  lucide.createIcons();
+</script>
 {% endblock %}

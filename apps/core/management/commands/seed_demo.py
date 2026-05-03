@@ -104,14 +104,15 @@ class Command(BaseCommand):
         for data in demo_users:
             password = data.pop("password")
             user, created = User.objects.get_or_create(username=data["username"], defaults=data)
+            user.set_password(password)
+            user.save()
+            
             if created:
-                user.set_password(password)
-                user.save()
                 user.profile.department = cs_department
                 user.profile.save(update_fields=["department"])
                 self.stdout.write(self.style.SUCCESS(f"Created demo user: {user.username}"))
             else:
-                self.stdout.write(f"Demo user already exists: {user.username}")
+                self.stdout.write(f"Updated demo user password: {user.username}")
 
         admin_user = User.objects.get(username="admin")
         teacher_user = User.objects.get(username="teacher")

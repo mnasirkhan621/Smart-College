@@ -85,6 +85,8 @@ TEMPLATES = [
 WSGI_APPLICATION = "config.wsgi.application"
 ASGI_APPLICATION = "config.asgi.application"
 
+DB_ENGINE = os.environ.get("DB_ENGINE", "sqlite").lower()
+
 if os.environ.get("DATABASE_URL"):
     DATABASES = {
         "default": dj_database_url.config(

@@ -1,60 +1,100 @@
 {% extends "base.html" %}
 
-{% block title %}Admin Dashboard - SCMS{% endblock %}
+{% block title %}Admin Dashboard | SCMS{% endblock %}
+
+{% block breadcrumbs %}Dashboard / Admin{% endblock %}
 
 {% block content %}
-<section class="dashboard">
-  <div>
-    <p class="eyebrow">Admin</p>
-    <h1>Administration Dashboard</h1>
-    <p>Foundation setup is ready. Start by managing users, departments, academic years, and semesters.</p>
+<section>
+  <div style="margin-bottom: 40px;">
+    <h1>Welcome, {{ request.user.username }}</h1>
+    <p>Monitor your college activities, manage academic records, and track financial performance from one place.</p>
   </div>
 
-  <div class="grid">
-    <a class="tile" href="{% url 'accounts:user_list' %}">
-      <span>User Management</span>
-      <strong>Admin, Teacher, Student</strong>
-    </a>
-    <a class="tile" href="{% url 'academics:home' %}">
-      <span>Academic Records</span>
-      <strong>Students, faculty, courses</strong>
-    </a>
-    <a class="tile" href="{% url 'attendance:home' %}">
-      <span>Attendance & Notices</span>
-      <strong>Daily records and communication</strong>
-    </a>
-    <a class="tile" href="{% url 'exams:home' %}">
-      <span>Exams & Results</span>
-      <strong>Schedules, marks, publishing</strong>
-    </a>
-    <a class="tile" href="{% url 'fees:home' %}">
-      <span>Fees & Reports</span>
-      <strong>Invoices, receipts, dues</strong>
-    </a>
-    <a class="tile" href="/admin/core/department/">
-      <span>Departments</span>
-      <strong>College structure</strong>
-    </a>
-    <a class="tile" href="/admin/core/academicyear/">
-      <span>Academic Years</span>
-      <strong>Session setup</strong>
-    </a>
-    <a class="tile" href="/admin/core/semester/">
-      <span>Semesters</span>
-      <strong>Term setup</strong>
-    </a>
+  <div class="stats-grid">
+    <div class="stat-card">
+      <div class="stat-icon"><i data-lucide="users"></i></div>
+      <div class="stat-content">
+        <span class="stat-value">{{ user_count|default:"0" }}</span>
+        <span class="stat-label">Total Users</span>
+      </div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-icon"><i data-lucide="graduation-cap"></i></div>
+      <div class="stat-content">
+        <span class="stat-value">{{ student_count|default:"0" }}</span>
+        <span class="stat-label">Active Students</span>
+      </div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-icon"><i data-lucide="book-open"></i></div>
+      <div class="stat-content">
+        <span class="stat-value">{{ course_count|default:"0" }}</span>
+        <span class="stat-label">Courses</span>
+      </div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-icon"><i data-lucide="dollar-sign"></i></div>
+      <div class="stat-content">
+        <span class="stat-value">{{ pending_fees|default:"0" }}</span>
+        <span class="stat-label">Pending Fees</span>
+      </div>
+    </div>
   </div>
 
-  <h2>Recent Notices</h2>
-  <div class="notice-list compact">
-    {% for notice in notices %}
-      <article>
-        <strong>{{ notice.title }}</strong>
-        <span>{{ notice.get_audience_display }} - {{ notice.publish_at|date:"M d, Y" }}</span>
-      </article>
-    {% empty %}
-      <article><strong>No active notices yet.</strong></article>
-    {% endfor %}
+  <div class="grid" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 24px;">
+    <!-- Core Management -->
+    <div class="panel">
+      <h2 style="margin-top: 0;"><i data-lucide="command" style="width: 20px; vertical-align: middle;"></i> Core Management</h2>
+      <div class="notice-list compact" style="margin-top: 20px;">
+        <a class="nav-item" href="{% url 'accounts:user_list' %}" style="color: var(--text);">
+          <i data-lucide="users"></i> User Directory
+        </a>
+        <a class="nav-item" href="{% url 'academics:home' %}" style="color: var(--text);">
+          <i data-lucide="database"></i> Academic Records
+        </a>
+        <a class="nav-item" href="{% url 'attendance:home' %}" style="color: var(--text);">
+          <i data-lucide="check-circle"></i> Attendance Tracking
+        </a>
+      </div>
+    </div>
+
+    <!-- Quick Setup -->
+    <div class="panel">
+      <h2 style="margin-top: 0;"><i data-lucide="settings" style="width: 20px; vertical-align: middle;"></i> Quick Configuration</h2>
+      <div class="notice-list compact" style="margin-top: 20px;">
+        <a class="nav-item" href="/admin/core/department/" style="color: var(--text);">
+          <i data-lucide="building"></i> Departments
+        </a>
+        <a class="nav-item" href="/admin/core/academicyear/" style="color: var(--text);">
+          <i data-lucide="calendar"></i> Academic Years
+        </a>
+        <a class="nav-item" href="/admin/core/semester/" style="color: var(--text);">
+          <i data-lucide="layers"></i> Semesters
+        </a>
+      </div>
+    </div>
+
+    <!-- Recent Announcements -->
+    <div class="panel">
+      <h2 style="margin-top: 0;"><i data-lucide="bell" style="width: 20px; vertical-align: middle;"></i> Recent Notices</h2>
+      <div class="notice-list compact" style="margin-top: 20px;">
+        {% for notice in notices %}
+          <div style="padding: 12px; border-bottom: 1px solid var(--border);">
+            <strong style="display: block; font-size: 14px;">{{ notice.title }}</strong>
+            <span class="muted">{{ notice.publish_at|date:"M d, Y" }} &bull; {{ notice.get_audience_display }}</span>
+          </div>
+        {% empty %}
+          <div class="muted">No active notices.</div>
+        {% endfor %}
+        <a href="{% url 'attendance:notice_list' %}" class="button" style="width: 100%; margin-top: 12px; font-size: 13px;">View All Notices</a>
+      </div>
+    </div>
   </div>
 </section>
+
+<script>
+  // Re-run Lucide in case content was dynamically loaded
+  lucide.createIcons();
+</script>
 {% endblock %}
