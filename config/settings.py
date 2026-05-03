@@ -38,6 +38,13 @@ SECRET_KEY = os.environ.get("SECRET_KEY", "development-only-secret-key")
 DEBUG = env_bool("DEBUG", True)
 ALLOWED_HOSTS = env_list("ALLOWED_HOSTS", ["127.0.0.1", "localhost"])
 
+# Render.com specific setup
+if os.environ.get("RENDER"):
+    ALLOWED_HOSTS.append(os.environ.get("RENDER_EXTERNAL_HOSTNAME"))
+    # Also support wildcard for .onrender.com
+    if ".onrender.com" not in [h.lower() for h in ALLOWED_HOSTS]:
+        ALLOWED_HOSTS.append(".onrender.com")
+
 INSTALLED_APPS = [
     "django.contrib.admin",
     "django.contrib.auth",
