@@ -1,0 +1,65 @@
+{% extends "base.html" %}
+
+{% block title %}My Fees - SCMS{% endblock %}
+
+{% block content %}
+<section class="dashboard">
+  <p class="eyebrow">Student</p>
+  <h1>My Fees</h1>
+  {% if student_profile %}
+    <p>{{ student_profile.full_name }} - {{ student_profile.registration_no }}</p>
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th>Invoice</th>
+            <th>Category</th>
+            <th>Due Date</th>
+            <th>Total</th>
+            <th>Paid</th>
+            <th>Balance</th>
+            <th>Status</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for invoice in invoices %}
+            <tr>
+              <td>{{ invoice.invoice_no }}</td>
+              <td>{{ invoice.fee_structure.category }}</td>
+              <td>{{ invoice.due_date }}</td>
+              <td>{{ invoice.total_amount }}</td>
+              <td>{{ invoice.paid_amount }}</td>
+              <td>{{ invoice.balance }}</td>
+              <td><span class="badge{% if invoice.status != 'PAID' %} danger{% endif %}">{{ invoice.get_status_display }}</span></td>
+            </tr>
+          {% empty %}
+            <tr><td colspan="7">No fee invoices found.</td></tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+
+    <h2>Receipts</h2>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>Receipt</th><th>Invoice</th><th>Amount</th><th>Date</th><th>Action</th></tr></thead>
+        <tbody>
+          {% for payment in payments %}
+            <tr>
+              <td>{{ payment.receipt_no }}</td>
+              <td>{{ payment.invoice.invoice_no }}</td>
+              <td>{{ payment.amount }}</td>
+              <td>{{ payment.payment_date }}</td>
+              <td><a href="{% url 'fees:receipt_detail' payment.pk %}">View</a></td>
+            </tr>
+          {% empty %}
+            <tr><td colspan="5">No payment receipts found.</td></tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  {% else %}
+    <p>Your student profile has not been connected by the admin yet.</p>
+  {% endif %}
+</section>
+{% endblock %}

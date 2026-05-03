@@ -1,0 +1,20 @@
+{% extends "base.html" %}
+
+{% block title %}My Results - SCMS{% endblock %}
+
+{% block content %}
+<section class="dashboard">
+  <p class="eyebrow">Student</p>
+  <h1>My Results</h1>
+  <div class="grid">
+    {% for result in results %}
+      <a class="tile" href="{% url 'exams:student_result_detail' result.pk %}">
+        <span>{{ result.exam.name }}</span>
+        <strong>{{ result.percentage }}% - {{ result.get_status_display }}</strong>
+      </a>
+    {% empty %}
+      <div class="tile"><span>No results</span><strong>No published result is available yet.</strong></div>
+    {% endfor %}
+  </div>
+</section>
+{% endblock %}

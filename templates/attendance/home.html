@@ -1,0 +1,40 @@
+{% extends "base.html" %}
+
+{% block title %}Attendance - SCMS{% endblock %}
+
+{% block content %}
+<section class="dashboard">
+  <div class="section-heading">
+    <div>
+      <p class="eyebrow">Part 3</p>
+      <h1>Attendance & Notices</h1>
+      <p>Record daily attendance, monitor low attendance, and publish role-based notices.</p>
+    </div>
+  </div>
+
+  <div class="grid">
+    <a class="tile" href="{% url 'attendance:session_list' %}">
+      <span>Attendance Sessions</span>
+      <strong>{{ session_count }}</strong>
+    </a>
+    <a class="tile" href="{% url 'attendance:session_create' %}">
+      <span>Mark Attendance</span>
+      <strong>New Session</strong>
+    </a>
+    {% if request.user.is_admin_role %}
+      <a class="tile" href="{% url 'attendance:low_attendance' %}">
+        <span>Low Attendance</span>
+        <strong>Below 75%</strong>
+      </a>
+      <a class="tile" href="{% url 'attendance:notice_create' %}">
+        <span>Publish Notice</span>
+        <strong>{{ notice_count }} active</strong>
+      </a>
+    {% endif %}
+    <a class="tile" href="{% url 'attendance:notice_list' %}">
+      <span>Notices</span>
+      <strong>Role feed</strong>
+    </a>
+  </div>
+</section>
+{% endblock %}

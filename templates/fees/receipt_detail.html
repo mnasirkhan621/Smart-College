@@ -1,0 +1,27 @@
+{% extends "base.html" %}
+
+{% block title %}Receipt - SCMS{% endblock %}
+
+{% block content %}
+<section class="dashboard">
+  <div class="section-heading">
+    <div>
+      <p class="eyebrow">Receipt</p>
+      <h1>{{ payment.receipt_no }}</h1>
+      <p>{{ payment.invoice.student.full_name }} - {{ payment.invoice.student.registration_no }}</p>
+    </div>
+    <button class="button" onclick="window.print()">Print</button>
+  </div>
+
+  <div class="detail-list">
+    <div><span>Invoice</span><strong>{{ payment.invoice.invoice_no }}</strong></div>
+    <div><span>Category</span><strong>{{ payment.invoice.fee_structure.category }}</strong></div>
+    <div><span>Payment Date</span><strong>{{ payment.payment_date }}</strong></div>
+    <div><span>Amount Paid</span><strong>{{ payment.amount }}</strong></div>
+    <div><span>Method</span><strong>{{ payment.get_method_display }}</strong></div>
+    <div><span>Reference</span><strong>{{ payment.reference_no|default:"-" }}</strong></div>
+    <div><span>Received By</span><strong>{{ payment.received_by|default:"-" }}</strong></div>
+    <div><span>Remaining Balance</span><strong>{{ payment.invoice.balance }}</strong></div>
+  </div>
+</section>
+{% endblock %}

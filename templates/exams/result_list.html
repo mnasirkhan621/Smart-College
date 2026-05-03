@@ -1,0 +1,45 @@
+{% extends "base.html" %}
+
+{% block title %}Results - SCMS{% endblock %}
+
+{% block content %}
+<section class="dashboard">
+  <div class="section-heading">
+    <div>
+      <p class="eyebrow">Admin</p>
+      <h1>Published Results</h1>
+    </div>
+  </div>
+
+  <div class="table-wrap">
+    <table>
+      <thead>
+        <tr>
+          <th>Student</th>
+          <th>Exam</th>
+          <th>Marks</th>
+          <th>Percentage</th>
+          <th>Grade</th>
+          <th>Status</th>
+          <th>Action</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for result in results %}
+          <tr>
+            <td>{{ result.student.full_name }}<br><span class="muted">{{ result.student.registration_no }}</span></td>
+            <td>{{ result.exam.name }}</td>
+            <td>{{ result.obtained_marks }} / {{ result.total_marks }}</td>
+            <td>{{ result.percentage }}%</td>
+            <td>{{ result.grade|default:"-" }}</td>
+            <td><span class="badge{% if result.status == 'FAIL' %} danger{% endif %}">{{ result.get_status_display }}</span></td>
+            <td><a href="{% url 'exams:result_detail' result.pk %}">View</a></td>
+          </tr>
+        {% empty %}
+          <tr><td colspan="7">No published results yet.</td></tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</section>
+{% endblock %}

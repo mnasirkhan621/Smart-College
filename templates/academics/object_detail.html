@@ -1,0 +1,27 @@
+{% extends "base.html" %}
+
+{% block title %}{{ title }} - SCMS{% endblock %}
+
+{% block content %}
+<section class="dashboard">
+  <div class="section-heading">
+    <div>
+      <p class="eyebrow">Academics</p>
+      <h1>{{ title }}</h1>
+    </div>
+    <div class="actions">
+      <a class="button" href="{{ list_url }}">Back</a>
+      <a class="button primary" href="{{ update_url }}">Edit</a>
+    </div>
+  </div>
+
+  <div class="detail-list">
+    {% for label, value in fields %}
+      <div>
+        <span>{{ label }}</span>
+        <strong>{{ value }}</strong>
+      </div>
+    {% endfor %}
+  </div>
+</section>
+{% endblock %}

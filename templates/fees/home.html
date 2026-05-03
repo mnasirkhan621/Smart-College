@@ -1,0 +1,63 @@
+{% extends "base.html" %}
+
+{% block title %}Fees - SCMS{% endblock %}
+
+{% block content %}
+<section class="dashboard">
+  <div class="section-heading">
+    <div>
+      <p class="eyebrow">Part 5</p>
+      <h1>Fees, Reports & Backup</h1>
+      <p>Manage fee structures, invoices, payments, receipts, pending dues, and data backups.</p>
+    </div>
+  </div>
+
+  <div class="grid">
+    <a class="tile" href="{% url 'fees:invoice_list' %}">
+      <span>Invoices</span>
+      <strong>{{ invoice_count }}</strong>
+    </a>
+    <a class="tile" href="{% url 'fees:pending_dues' %}">
+      <span>Pending Dues</span>
+      <strong>{{ pending_count }}</strong>
+    </a>
+    <a class="tile" href="{% url 'fees:payment_create' %}">
+      <span>Payments</span>
+      <strong>{{ payment_count }}</strong>
+    </a>
+    <a class="tile" href="{% url 'fees:structure_list' %}">
+      <span>Fee Structures</span>
+      <strong>Setup</strong>
+    </a>
+    <a class="tile" href="{% url 'fees:category_list' %}">
+      <span>Categories</span>
+      <strong>Tuition, exams, misc</strong>
+    </a>
+  </div>
+
+  <h2>Backups</h2>
+  <p>Run <code>python manage.py backup_data</code> to create a JSON backup under <code>backups/</code>.</p>
+  <div class="table-wrap">
+    <table>
+      <thead>
+        <tr>
+          <th>File</th>
+          <th>Status</th>
+          <th>Created</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for log in backup_logs %}
+          <tr>
+            <td>{{ log.file_path }}</td>
+            <td>{{ log.status }}</td>
+            <td>{{ log.created_at }}</td>
+          </tr>
+        {% empty %}
+          <tr><td colspan="3">No backups logged yet.</td></tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</section>
+{% endblock %}

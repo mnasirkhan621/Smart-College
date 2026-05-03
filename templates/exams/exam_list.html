@@ -1,0 +1,53 @@
+{% extends "base.html" %}
+
+{% block title %}Exams - SCMS{% endblock %}
+
+{% block content %}
+<section class="dashboard">
+  <div class="section-heading">
+    <div>
+      <p class="eyebrow">Exams</p>
+      <h1>Exam Terms</h1>
+    </div>
+    {% if request.user.is_admin_role %}
+      <a class="button primary" href="{% url 'exams:exam_create' %}">Create Exam</a>
+    {% endif %}
+  </div>
+
+  <div class="table-wrap">
+    <table>
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>Semester</th>
+          <th>Dates</th>
+          <th>Status</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for exam in exams %}
+          <tr>
+            <td>{{ exam.name }}</td>
+            <td>{{ exam.semester }}</td>
+            <td>{{ exam.start_date }} to {{ exam.end_date }}</td>
+            <td><span class="badge">{{ exam.get_status_display }}</span></td>
+            <td>
+              {% if request.user.is_admin_role %}
+                <form method="post" action="{% url 'exams:publish_results' exam.pk %}">
+                  {% csrf_token %}
+                  <button class="link-button" type="submit">Publish Results</button>
+                </form>
+              {% else %}
+                -
+              {% endif %}
+            </td>
+          </tr>
+        {% empty %}
+          <tr><td colspan="5">No exams found.</td></tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</section>
+{% endblock %}

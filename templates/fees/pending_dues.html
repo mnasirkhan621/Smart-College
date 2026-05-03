@@ -1,0 +1,38 @@
+{% extends "base.html" %}
+
+{% block title %}Pending Dues - SCMS{% endblock %}
+
+{% block content %}
+<section class="dashboard">
+  <p class="eyebrow">Reports</p>
+  <h1>Pending Dues</h1>
+  <div class="table-wrap">
+    <table>
+      <thead>
+        <tr>
+          <th>Student</th>
+          <th>Invoice</th>
+          <th>Due Date</th>
+          <th>Total</th>
+          <th>Paid</th>
+          <th>Balance</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for invoice in invoices %}
+          <tr>
+            <td>{{ invoice.student.full_name }}<br><span class="muted">{{ invoice.student.registration_no }}</span></td>
+            <td>{{ invoice.invoice_no }}</td>
+            <td>{{ invoice.due_date }}</td>
+            <td>{{ invoice.total_amount }}</td>
+            <td>{{ invoice.paid_amount }}</td>
+            <td><span class="badge danger">{{ invoice.balance }}</span></td>
+          </tr>
+        {% empty %}
+          <tr><td colspan="6">No pending dues found.</td></tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</section>
+{% endblock %}

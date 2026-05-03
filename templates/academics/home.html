@@ -1,0 +1,24 @@
+{% extends "base.html" %}
+
+{% block title %}Academics - SCMS{% endblock %}
+
+{% block content %}
+<section class="dashboard">
+  <div class="section-heading">
+    <div>
+      <p class="eyebrow">Admin</p>
+      <h1>Academic Records</h1>
+      <p>Manage the college academic database: students, faculty, courses, subjects, classes, enrollments, and teacher assignments.</p>
+    </div>
+  </div>
+
+  <div class="grid">
+    {% for label, count, url_name in stats %}
+      <a class="tile" href="{% url url_name %}">
+        <span>{{ label }}</span>
+        <strong>{{ count }}</strong>
+      </a>
+    {% endfor %}
+  </div>
+</section>
+{% endblock %}

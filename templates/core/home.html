@@ -1,0 +1,11 @@
+{% extends "base.html" %}
+
+{% block title %}SCMS Login{% endblock %}
+
+{% block content %}
+<section class="center-panel">
+  <h1>Smart College Management System</h1>
+  <p>Centralized academic and administrative management for college operations.</p>
+  <a class="button primary" href="{% url 'accounts:login' %}">Login</a>
+</section>
+{% endblock %}

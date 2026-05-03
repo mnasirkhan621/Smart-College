@@ -1,0 +1,31 @@
+{% extends "base.html" %}
+
+{% block title %}Notices - SCMS{% endblock %}
+
+{% block content %}
+<section class="dashboard">
+  <div class="section-heading">
+    <div>
+      <p class="eyebrow">Communication</p>
+      <h1>Notices</h1>
+    </div>
+    {% if request.user.is_admin_role %}
+      <a class="button primary" href="{% url 'attendance:notice_create' %}">Publish Notice</a>
+    {% endif %}
+  </div>
+
+  <div class="notice-list">
+    {% for notice in notices %}
+      <article>
+        <div>
+          <strong>{{ notice.title }}</strong>
+          <span>{{ notice.get_audience_display }} - {{ notice.publish_at|date:"M d, Y H:i" }}</span>
+        </div>
+        <p>{{ notice.body }}</p>
+      </article>
+    {% empty %}
+      <article><strong>No notices are available.</strong></article>
+    {% endfor %}
+  </div>
+</section>
+{% endblock %}

@@ -1,0 +1,15 @@
+{% extends "base.html" %}
+
+{% block title %}Create Attendance Session - SCMS{% endblock %}
+
+{% block content %}
+<section class="auth-panel wide">
+  <h1>Create Attendance Session</h1>
+  <form method="post">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button class="button primary" type="submit">Create and Mark</button>
+    <a class="button" href="{% url 'attendance:session_list' %}">Cancel</a>
+  </form>
+</section>
+{% endblock %}

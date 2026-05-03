@@ -1,0 +1,49 @@
+{% extends "base.html" %}
+
+{% block title %}Invoices - SCMS{% endblock %}
+
+{% block content %}
+<section class="dashboard">
+  <div class="section-heading">
+    <div>
+      <p class="eyebrow">Fees</p>
+      <h1>Invoices</h1>
+    </div>
+    <div class="actions">
+      <a class="button" href="{% url 'fees:payment_create' %}">Record Payment</a>
+      <a class="button primary" href="{% url 'fees:invoice_create' %}">Create Invoice</a>
+    </div>
+  </div>
+
+  <div class="table-wrap">
+    <table>
+      <thead>
+        <tr>
+          <th>Invoice</th>
+          <th>Student</th>
+          <th>Category</th>
+          <th>Total</th>
+          <th>Paid</th>
+          <th>Balance</th>
+          <th>Status</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for invoice in invoices %}
+          <tr>
+            <td>{{ invoice.invoice_no }}</td>
+            <td>{{ invoice.student.full_name }}<br><span class="muted">{{ invoice.student.registration_no }}</span></td>
+            <td>{{ invoice.fee_structure.category }}</td>
+            <td>{{ invoice.total_amount }}</td>
+            <td>{{ invoice.paid_amount }}</td>
+            <td>{{ invoice.balance }}</td>
+            <td><span class="badge{% if invoice.status != 'PAID' %} danger{% endif %}">{{ invoice.get_status_display }}</span></td>
+          </tr>
+        {% empty %}
+          <tr><td colspan="7">No invoices found.</td></tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</section>
+{% endblock %}

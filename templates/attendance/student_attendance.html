@@ -1,0 +1,52 @@
+{% extends "base.html" %}
+
+{% block title %}My Attendance - SCMS{% endblock %}
+
+{% block content %}
+<section class="dashboard">
+  <p class="eyebrow">Student</p>
+  <h1>My Attendance</h1>
+  {% if student_profile %}
+    <p>{{ student_profile.full_name }} - {{ student_profile.registration_no }}</p>
+    <div class="grid">
+      {% for item in summary %}
+        <div class="tile">
+          <span>{{ item.subject }}</span>
+          <strong>{{ item.percentage }}%</strong>
+        </div>
+      {% empty %}
+        <div class="tile"><span>No records</span><strong>Attendance has not been marked yet.</strong></div>
+      {% endfor %}
+    </div>
+
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th>Date</th>
+            <th>Subject</th>
+            <th>Class</th>
+            <th>Status</th>
+            <th>Remarks</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for record in records %}
+            <tr>
+              <td>{{ record.session.date }}</td>
+              <td>{{ record.session.assignment.subject }}</td>
+              <td>{{ record.session.assignment.class_group }}</td>
+              <td><span class="badge">{{ record.get_status_display }}</span></td>
+              <td>{{ record.remarks|default:"-" }}</td>
+            </tr>
+          {% empty %}
+            <tr><td colspan="5">No attendance records yet.</td></tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  {% else %}
+    <p>Your student profile has not been connected by the admin yet.</p>
+  {% endif %}
+</section>
+{% endblock %}

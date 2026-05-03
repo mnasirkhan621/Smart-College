@@ -1,0 +1,35 @@
+services:
+  web:
+    build: .
+    command: sh -c "python manage.py migrate && python manage.py seed_demo && python manage.py runserver 0.0.0.0:8000"
+    volumes:
+      - .:/app
+    ports:
+      - "8000:8000"
+    environment:
+      SECRET_KEY: ${SECRET_KEY:-docker-development-secret-key}
+      DEBUG: ${DEBUG:-True}
+      ALLOWED_HOSTS: 127.0.0.1,localhost,0.0.0.0
+      DB_ENGINE: postgres
+      POSTGRES_DB: ${POSTGRES_DB:-scms}
+      POSTGRES_USER: ${POSTGRES_USER:-scms}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-scms}
+      POSTGRES_HOST: db
+      POSTGRES_PORT: ${POSTGRES_PORT:-5432}
+      TIME_ZONE: ${TIME_ZONE:-Asia/Karachi}
+    depends_on:
+      - db
+
+  db:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_DB: ${POSTGRES_DB:-scms}
+      POSTGRES_USER: ${POSTGRES_USER:-scms}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-scms}
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+
+volumes:
+  postgres_data:

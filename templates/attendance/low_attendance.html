@@ -1,0 +1,44 @@
+{% extends "base.html" %}
+
+{% block title %}Low Attendance - SCMS{% endblock %}
+
+{% block content %}
+<section class="dashboard">
+  <div class="section-heading">
+    <div>
+      <p class="eyebrow">Admin</p>
+      <h1>Low Attendance Report</h1>
+      <p>Students below {{ threshold }}% attendance.</p>
+    </div>
+  </div>
+
+  <div class="table-wrap">
+    <table>
+      <thead>
+        <tr>
+          <th>Student</th>
+          <th>Course</th>
+          <th>Class</th>
+          <th>Present</th>
+          <th>Total</th>
+          <th>Percentage</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for row in rows %}
+          <tr>
+            <td>{{ row.student.full_name }}<br><span class="muted">{{ row.student.registration_no }}</span></td>
+            <td>{{ row.student.course }}</td>
+            <td>{{ row.student.current_class|default:"-" }}</td>
+            <td>{{ row.present }}</td>
+            <td>{{ row.total }}</td>
+            <td><span class="badge danger">{{ row.percentage }}%</span></td>
+          </tr>
+        {% empty %}
+          <tr><td colspan="6">No low-attendance students found.</td></tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</section>
+{% endblock %}

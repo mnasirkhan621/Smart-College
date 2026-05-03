@@ -1,0 +1,51 @@
+{% extends "base.html" %}
+
+{% block title %}Mark Attendance - SCMS{% endblock %}
+
+{% block content %}
+<section class="dashboard">
+  <div class="section-heading">
+    <div>
+      <p class="eyebrow">Attendance</p>
+      <h1>{{ session.assignment.subject.name }}</h1>
+      <p>{{ session.assignment.class_group }} - {{ session.date }}{% if session.topic %} - {{ session.topic }}{% endif %}</p>
+    </div>
+  </div>
+
+  <form method="post">
+    {% csrf_token %}
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th>Registration</th>
+            <th>Student</th>
+            <th>Status</th>
+            <th>Remarks</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for record in records %}
+            <tr>
+              <td>{{ record.student.registration_no }}</td>
+              <td>{{ record.student.full_name }}</td>
+              <td>
+                <select name="status_{{ record.id }}">
+                  {% for value, label in statuses %}
+                    <option value="{{ value }}"{% if record.status == value %} selected{% endif %}>{{ label }}</option>
+                  {% endfor %}
+                </select>
+              </td>
+              <td><input type="text" name="remarks_{{ record.id }}" value="{{ record.remarks }}"></td>
+            </tr>
+          {% empty %}
+            <tr><td colspan="4">No enrolled students were found for this subject and class.</td></tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+    <button class="button primary" type="submit">Save Attendance</button>
+    <a class="button" href="{% url 'attendance:session_list' %}">Back</a>
+  </form>
+</section>
+{% endblock %}

@@ -1,0 +1,15 @@
+{% extends "base.html" %}
+
+{% block title %}Publish Notice - SCMS{% endblock %}
+
+{% block content %}
+<section class="auth-panel wide">
+  <h1>Publish Notice</h1>
+  <form method="post">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button class="button primary" type="submit">Publish</button>
+    <a class="button" href="{% url 'attendance:notice_list' %}">Cancel</a>
+  </form>
+</section>
+{% endblock %}

@@ -1,0 +1,36 @@
+{% extends "base.html" %}
+
+{% block title %}Exams - SCMS{% endblock %}
+
+{% block content %}
+<section class="dashboard">
+  <div class="section-heading">
+    <div>
+      <p class="eyebrow">Part 4</p>
+      <h1>Exams & Results</h1>
+      <p>Create exams, schedule subject papers, enter marks, publish results, and track promotion status.</p>
+    </div>
+  </div>
+
+  <div class="grid">
+    <a class="tile" href="{% url 'exams:exam_list' %}">
+      <span>Exams</span>
+      <strong>{{ exam_count }}</strong>
+    </a>
+    <a class="tile" href="{% url 'exams:schedule_list' %}">
+      <span>Schedules & Marks</span>
+      <strong>{{ schedule_count }}</strong>
+    </a>
+    {% if request.user.is_admin_role %}
+      <a class="tile" href="{% url 'exams:result_list' %}">
+        <span>Published Results</span>
+        <strong>{{ result_count }}</strong>
+      </a>
+      <a class="tile" href="{% url 'exams:grade_list' %}">
+        <span>Grade Scale</span>
+        <strong>A to F</strong>
+      </a>
+    {% endif %}
+  </div>
+</section>
+{% endblock %}

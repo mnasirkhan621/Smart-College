@@ -1,0 +1,60 @@
+{% extends "base.html" %}
+
+{% block title %}Admin Dashboard - SCMS{% endblock %}
+
+{% block content %}
+<section class="dashboard">
+  <div>
+    <p class="eyebrow">Admin</p>
+    <h1>Administration Dashboard</h1>
+    <p>Foundation setup is ready. Start by managing users, departments, academic years, and semesters.</p>
+  </div>
+
+  <div class="grid">
+    <a class="tile" href="{% url 'accounts:user_list' %}">
+      <span>User Management</span>
+      <strong>Admin, Teacher, Student</strong>
+    </a>
+    <a class="tile" href="{% url 'academics:home' %}">
+      <span>Academic Records</span>
+      <strong>Students, faculty, courses</strong>
+    </a>
+    <a class="tile" href="{% url 'attendance:home' %}">
+      <span>Attendance & Notices</span>
+      <strong>Daily records and communication</strong>
+    </a>
+    <a class="tile" href="{% url 'exams:home' %}">
+      <span>Exams & Results</span>
+      <strong>Schedules, marks, publishing</strong>
+    </a>
+    <a class="tile" href="{% url 'fees:home' %}">
+      <span>Fees & Reports</span>
+      <strong>Invoices, receipts, dues</strong>
+    </a>
+    <a class="tile" href="/admin/core/department/">
+      <span>Departments</span>
+      <strong>College structure</strong>
+    </a>
+    <a class="tile" href="/admin/core/academicyear/">
+      <span>Academic Years</span>
+      <strong>Session setup</strong>
+    </a>
+    <a class="tile" href="/admin/core/semester/">
+      <span>Semesters</span>
+      <strong>Term setup</strong>
+    </a>
+  </div>
+
+  <h2>Recent Notices</h2>
+  <div class="notice-list compact">
+    {% for notice in notices %}
+      <article>
+        <strong>{{ notice.title }}</strong>
+        <span>{{ notice.get_audience_display }} - {{ notice.publish_at|date:"M d, Y" }}</span>
+      </article>
+    {% empty %}
+      <article><strong>No active notices yet.</strong></article>
+    {% endfor %}
+  </div>
+</section>
+{% endblock %}
